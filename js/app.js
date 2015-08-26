@@ -12,7 +12,7 @@ $('#search').on('click', function(event) {
 	
 	$.ajax({
 		type: 'GET',
-		url: "https://outdoor-data-api.herokuapp.com/api.json?api_key=1fc0ab0d006bccd6e0fdf1856cea5b2c&q[city_cont]=" + city + '&q[activities_activity_type_name_cont]=' + activity + "&radius=1000",
+		url: "https://outdoor-data-api.herokuapp.com/api.json?api_key=1fc0ab0d006bccd6e0fdf1856cea5b2c&q[city_cont]=" + city + '&q[activities_activity_type_name_cont]=' + activity + "&radius=100",
 		dataType: 'jsonp',
 		jsonp: 'callback',
 		jsonpCallback: 'query',
@@ -20,10 +20,13 @@ $('#search').on('click', function(event) {
 	})
 
 		.done(function(data) {
+			
+			if (data.places.length === 0) {
+				alert("There are no results for your search.");
+			}
+			else {
 
-
-
-			for (var i = 0; i < data.places.length; i++) {
+				for (var i = 0; i < data.places.length; i++) {
 				console.log(data);
 
 				var city = data.places[i].city;
@@ -54,15 +57,12 @@ $('#search').on('click', function(event) {
 
 						$table.append( '<tr class="row"><td>' + image + '</td><td class="cell"><div class="desc"><b><a href="' + url + '">' + name + '</b></a><span> (Click name for more details)</span><br>' + city + ', ' + state + '<br><br>' + desc + '</div></td></tr>' );
 						$('.site').append($table);
-
 					}
 				}
 			}
+			}
 		})
-		.fail(function() { 
-			alert("There are not results for your search.");
-
-		})
+		
 })
 
 });
